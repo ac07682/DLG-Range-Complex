@@ -39,21 +39,34 @@ Spawn_Reaper_2 = SPAWN:New("Reaper-2")
 	:SpawnScheduled(5,.5)
 
  -- Spawn SEAD Range Targets
- SpawnSEADTarget = SPAWN:New("SEAD SA13-1")
+ SEADTemplates = {"SEAD SA8","SEAD SA15"}
+ SEADZones = {ZONE:New("SEAD Zone-1"),ZONE:New("SEAD Zone-2"),ZONE:New("SEAD Zone-3")}
+
+ SpawnSEADTarget1 = SPAWN:New("SEAD Target-1")
  	:InitLimit(1,0)
- 	--:InitHiddenOnMap()
- 	:SpawnScheduled(120,.5)
-  SpawnSEADTarget = SPAWN:New("SEAD SA13-2")
+ 	:InitRandomizeTemplate(SEADTemplates)
+ 	:InitRandomizeZones(SEADZones)
+ 	:InitHiddenOnMap()
+ 	:SpawnScheduled(600,.4)
+ SpawnSEADTarget2 = SPAWN:New("SEAD Target-2")
  	:InitLimit(1,0)
- 	--:InitHiddenOnMap()
- 	:SpawnScheduled(120,.5)
-  SpawnSEADTarget = SPAWN:New("SEAD SA10")
+ 	:InitRandomizeTemplate(SEADTemplates)
+ 	:InitRandomizeZones(SEADZones)
+ 	:InitHiddenOnMap()
+ 	:SpawnScheduled(600,.4)
+ SpawnSEADTarget3 = SPAWN:New("SEAD Target-3")
  	:InitLimit(1,0)
- 	--:InitHiddenOnMap()
- 	:SpawnScheduled(120,.5)
+ 	:InitRandomizeTemplate(SEADTemplates)
+ 	:InitRandomizeZones(SEADZones)
+ 	:InitHiddenOnMap()
+ 	:SpawnScheduled(600,.4)
+ SpawnSEADTarget4 = SPAWN:New("SEAD SA10")
+    :InitLimit(8,0)
+ 	:InitHiddenOnMap()
+	:SpawnScheduled(600,.4)
 
  -- Setup SEAD Range
- SEADRange = SEAD:New({"SEAD SA13-1","SEAD SA13-2","SEAD SA10"})
+ SEADRange = SEAD:New({"SEAD Target-1","SEAD Target-2","SEAD Target-3","SEAD SA10"})
 
 
 
