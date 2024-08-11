@@ -70,6 +70,38 @@ Spawn_Reaper_2 = SPAWN:New("Reaper-2")
 
 
 
+ -- F10 Spawn BFM Targets
+ BFMSpawnZone = {ZONE:New("BFMSpawnZone")}
+ function BFMSpawn(unit)
+ 	SpawnBFMGroup = SPAWN:New(unit)
+ 		:InitLimit(1,1)
+ 		:InitRandomizeZones(BFMSpawnZone)
+ 		:SpawnScheduled(10,.5)
+ end
+
+ MenuLevel1 = MENU_MISSION:New("BFM Menu") -- Top level menu
+ MenuLevel2_1 = MENU_MISSION:New("MiG", MenuLevel1)
+ MenuLevel2_2 = MENU_MISSION:New("Sukhoi", MenuLevel1)
+ MenuLevel2_3 = MENU_MISSION:New("Other", MenuLevel1)
+
+ MenuLevel3_1 = MENU_MISSION_COMMAND:New("MiG-19 Farmer", MenuLevel2_1, BFMSpawn, "BFMFarmer")
+ MenuLevel3_2 = MENU_MISSION_COMMAND:New("MiG-21 Fishbed", MenuLevel2_1, BFMSpawn, "BFMFishbed")
+ MenuLevel3_3 = MENU_MISSION_COMMAND:New("MiG-23 Flogger", MenuLevel2_1, BFMSpawn, "BFMFlogger")
+ MenuLevel3_4 = MENU_MISSION_COMMAND:New("MiG-25 Foxbat", MenuLevel2_1, BFMSpawn, "BFMFoxbat")
+ MenuLevel3_5 = MENU_MISSION_COMMAND:New("MiG-29 Fulcrum", MenuLevel2_1, BFMSpawn, "BFMFulcrum")
+ MenuLevel3_6 = MENU_MISSION_COMMAND:New("MiG-31 Foxhound", MenuLevel2_1, BFMSpawn, "BFMFoxhound")
+
+ MenuLevel4_1 = MENU_MISSION_COMMAND:New("Su-27 Flanker", MenuLevel2_2, BFMSpawn, "BFMFlanker")
+ MenuLevel4_2 = MENU_MISSION_COMMAND:New("Su-30 Flanker-C", MenuLevel2_2, BFMSpawn, "BFMFlanker-C")
+ MenuLevel4_3 = MENU_MISSION_COMMAND:New("Su-33 Flanker-D", MenuLevel2_2, BFMSpawn, "BFMFlanker-D")
+
+ MenuLevel5_1 = MENU_MISSION_COMMAND:New("F-14 Tomcat", MenuLevel2_3, BFMSpawn, "BFMTomcat")
+ MenuLevel5_2 = MENU_MISSION_COMMAND:New("F-15 Eagle", MenuLevel2_3, BFMSpawn, "BFMEagle")
+ MenuLevel5_3 = MENU_MISSION_COMMAND:New("F-16 Fighting Falcon", MenuLevel2_3, BFMSpawn, "BFMViper")
+ MenuLevel5_4 = MENU_MISSION_COMMAND:New("F-4 Phantom II", MenuLevel2_3, BFMSpawn, "BFMPhantom")
+ MenuLevel5_5 = MENU_MISSION_COMMAND:New("MiG-28", MenuLevel2_3, BFMSpawn, "BFMTiger")
+ MenuLevel5_6 = MENU_MISSION_COMMAND:New("F/A-18 Hornet", MenuLevel2_3, BFMSpawn, "BFMHornet")
+ MenuLevel5_7 = MENU_MISSION_COMMAND:New("BAE Systems Hawk", MenuLevel2_3, BFMSpawn, "BFMHawk")
 
  -- Setup the bombing / strafing range
 
@@ -79,7 +111,7 @@ Spawn_Reaper_2 = SPAWN:New("Reaper-2")
 
 
  -- Table of bombing target names. Again these are the names of the corresponding units as defined in the ME.
- local bombtargets={"Bomb Target Circle Left", "Bomb Target Circle Right"}
+ local bombtargets={"Bomb Target Circle Left", "Bomb Target Circle Right", "BTTruck1", "BTTruck2", "BTTank1", "BTTank2", "BTStruc1", "BTBunker1", "BTBunker2", "BTBunker3", "BTSil1", "BTSil2", "BTSil3"}
 
  -- Create a range object.
  BTRange=RANGE:New("Bombing & Strafing Range")
@@ -102,32 +134,6 @@ Spawn_Reaper_2 = SPAWN:New("Reaper-2")
 
  -- Start range.
  BTRange:Start()
-
-
-
-  -- Setup the Moving Target range
-
- -- Table of bombing target names. Again these are the names of the corresponding units as defined in the ME.
- local movingtargets={"MTTruck-1-1","MTTruck-1-2","MTTruck-1-3","MTTruck-1-4","MTTruck-2-1","MTTruck-2-2","MTTruck-2-3","MTTruck-2-4"}
-
- -- Create a range object.
- MTRange=RANGE:New("Moving Target Range")
-
- -- Add bombing targets. A good hit is if the bomb falls less then 50 m from the target.
- MTRange:AddBombingTargets(movingtargets, 30)
-
- -- Fine Tuning
- MTRange:TrackRocketsOFF()
- MTRange:SetInstructorRadio(300)
- MTRange:SetRangeControl(300)
- MTRange:SetAutosaveOn()
- MTRange:SetRangeZone("MTRange Zone")
-
- -- Start range.
- MTRange:Start()
-
-
-
 
 
   -- Events handler for startup message
@@ -223,4 +229,42 @@ end
 	-- The A-10A etc use a specific laser code to guide its laser guides rockets.
 	-- The code is 1680. A special menu option will be added that allows to lase with 1680.
 	RecceDesignation:AddMenuLaserCode( 1680, "Lase for A-10A (%d)" )
+
+-- The X
+
+Spawn_XTanks = SPAWN
+	:New( "XTank1" )
+	:InitLimit( 8, 0 )
+	:InitRandomizePosition(300)
+	:SpawnScheduled(1,0)
+Spawn_XTanks:HandleEvent( EVENTS.Dead )
+function Spawn_XTanks:OnEventDead( EventData )
+  Spawn_XTanks:Destroy()
+end
+
+
+Bunker1 = STATIC:FindByName( "XBunker1-1", true )
+Bunker1:HandleEvent( EVENTS.Dead )
+function Bunker1:OnEventDead( EventData )
+  Bunker1:ReSpawn()
+end
+
+Bunker2 = STATIC:FindByName( "XBunker2-1", true )
+Bunker2:HandleEvent( EVENTS.Dead )
+function Bunker2:OnEventDead( EventData )
+  Bunker2:ReSpawn()
+end
+
+Bks = STATIC:FindByName( "XBks", true )
+Bks:HandleEvent( EVENTS.Dead )
+function Bks:OnEventDead( EventData )
+  Bks:ReSpawn()
+end
+
+Heli = STATIC:FindByName( "XHeli-1", true )
+Heli:HandleEvent( EVENTS.Dead )
+function Heli:OnEventDead( EventData )
+  Heli:Destroy()
+  Heli:ReSpawn()
+end
 
